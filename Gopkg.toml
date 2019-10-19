@@ -25,6 +25,10 @@
 #   unused-packages = true
 
 
+[[constraint]]
+  branch = "poorny-gosseract_support"
+  name = "github.com/sajari/docconv"
+
 [prune]
   go-tests = true
   unused-packages = true
