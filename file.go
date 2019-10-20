@@ -5,9 +5,9 @@ import (
 )
 
 type UnanalysedFile struct {
-	Path  string
-	Rules []Rule
-	//Actions []Action
+	Path    string
+	Rules   []Rule
+	Actions []Action
 }
 
 // AnalysedFile represent a file once analysed, that can then be processed
@@ -17,6 +17,7 @@ type AnalysedFile struct {
 	Type        string
 	Path        string
 	Rules       []Rule
+	Actions     []Action
 }
 
 // Convert a file, depending on its type
@@ -34,6 +35,7 @@ func convert(f UnanalysedFile, fileType string) (AnalysedFile, error) {
 	analysed.TextContent = res.Body
 	analysed.Type = fileType
 	analysed.Rules = f.Rules
+	analysed.Actions = f.Actions
 
 	return analysed, nil
 }

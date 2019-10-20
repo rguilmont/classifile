@@ -122,6 +122,14 @@
   version = "v0.0.1"
 
 [[projects]]
+  digest = "1:69d7d8f871a15079052dc15c85d4f44915b2bf3fdbd56cf14e424b4326289717"
+  name = "github.com/otiai10/copy"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f98458f9df5788f53462a1bf427b728f113ab481"
+  version = "v1.0.2"
+
+[[projects]]
   digest = "1:7ccef172acdde402715f443a85d8c9acbdd48570139eda4f9b224305c0049c69"
   name = "github.com/otiai10/gosseract"
   packages = [
@@ -186,6 +194,7 @@
   input-imports = [
     "code.sajari.com/docconv",
     "github.com/gabriel-vasile/mimetype",
+    "github.com/otiai10/copy",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

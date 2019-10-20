@@ -9,14 +9,33 @@ func main() {
 
 	//
 	req := SearchRequest{
-		"*.pdf",
-		"/home/romain/Downloads",
+		".*.pdf",
+		"/home/romain/Downloads2",
 		[]Rule{
 			[]Match{
 				Match{
 					"content",
-					"Crédit Agricole",
-					true},
+					"(?i)(Crédit Agricole)",
+					true,
+				},
+			},
+			{
+				Match{
+					"content",
+					"(?i)(ocana)",
+					true,
+				},
+				Match{
+					"content",
+					"(?i)(angie)",
+					false,
+				},
+			},
+		},
+		[]Action{
+			Action{
+				"copy",
+				"/tmp/gros_chien/chien/",
 			},
 		},
 	}
@@ -24,8 +43,12 @@ func main() {
 	ch := make(chan UnanalysedFile)
 	ch2 := make(chan AnalysedFile)
 
-	go analyse(ch, ch2)
-	go processFile(ch2)
+	for i := 0; i < 1; i++ {
+		go analyse(ch, ch2)
+		go processFile(ch2)
+	}
+
 	search([]SearchRequest{req, req}, ch)
 	close(ch)
+	<-ch2
 }

@@ -44,6 +44,7 @@ func elements(elem string, f AnalysedFile) []string {
 }
 
 func processRule(r Rule, f AnalysedFile) bool {
+
 	for _, m := range r {
 		if !validateRule(r) {
 			log.Printf("Invalid rule %v", m)
@@ -58,10 +59,12 @@ func processRule(r Rule, f AnalysedFile) bool {
 				return false
 			}
 			if res != m.Expected {
+				log.Printf("PROCESSING RULE %v - %v NOT TRIGGERED", r, f.Path)
 				return false
 			}
 		}
 	}
+	log.Printf("PROCESSING RULE %v - %v TRIGGERED", r, f.Path)
 	return true
 }
 
@@ -69,7 +72,7 @@ func processFile(process chan AnalysedFile) {
 	for f := range process {
 		for _, rule := range f.Rules {
 			if processRule(rule, f) {
-				log.Printf("MATCH : %v - Rule %v", f.Path, rule)
+				go action(f)
 			}
 		}
 	}

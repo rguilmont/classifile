@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"path"
+	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/gabriel-vasile/mimetype"
 )
@@ -13,6 +14,7 @@ type SearchRequest struct {
 	FileName  string
 	Directory string
 	Rules     []Rule
+	Actions   []Action
 }
 
 // Internal type to have a set like structure
@@ -46,17 +48,33 @@ func search(requests []SearchRequest, analyse chan UnanalysedFile) {
 	found := newset()
 
 	for _, request := range requests {
-		matches, err := filepath.Glob(path.Join(request.Directory, request.FileName))
+
+		matchingFiles := newset()
+		err := filepath.Walk(request.Directory, func(p string, f os.FileInfo, err error) error {
+			if err != nil {
+				log.Printf("Error while searching on directory %v : %v", p, err)
+			} else {
+				match, err := regexp.MatchString(request.FileName, f.Name())
+				if err != nil {
+					log.Printf("Error while searchgin with regex %v : %v", request.FileName, err)
+				} else {
+					if !f.IsDir() && match {
+						matchingFiles.add(p)
+					}
+				}
+			}
+			return nil
+		})
 
 		if err != nil {
 			log.Printf("Error while searching into directory %v : %v", request.Directory, request.FileName)
 		}
-		for _, f := range matches {
+		for f := range matchingFiles.m {
 			if found.contains(f) {
 				log.Printf("File %v already processed", f)
 			} else {
 				found.add(f)
-				analyse <- UnanalysedFile{f, request.Rules}
+				analyse <- UnanalysedFile{f, request.Rules, request.Actions}
 			}
 		}
 	}
@@ -80,4 +98,5 @@ func analyse(analyse chan UnanalysedFile, process chan AnalysedFile) {
 			}
 		}
 	}
+	close(process)
 }
