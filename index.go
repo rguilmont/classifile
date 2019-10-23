@@ -11,10 +11,9 @@ import (
 
 // SearchRequest represents the arguments required to process search requests
 type SearchRequest struct {
-	FileName  string
-	Directory string
-	Rules     []Rule
-	Actions   []Action
+	FileName  string `required:"true"`
+	Directory string `required:"true"`
+	Rules     []Rule `required:"true"`
 }
 
 // Internal type to have a set like structure
@@ -74,7 +73,7 @@ func search(requests []SearchRequest, analyse chan UnanalysedFile) {
 				log.Printf("File %v already processed", f)
 			} else {
 				found.add(f)
-				analyse <- UnanalysedFile{f, request.Rules, request.Actions}
+				analyse <- UnanalysedFile{f, request.Rules}
 			}
 		}
 	}

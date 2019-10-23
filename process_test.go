@@ -34,7 +34,6 @@ func TestMatchingRules(t *testing.T) {
 		"application/pdf",
 		"/path/to/file.pdf",
 		[]Rule{},
-		[]Action{},
 	}
 
 	rule := Rule{

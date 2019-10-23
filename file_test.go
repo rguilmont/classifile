@@ -14,7 +14,6 @@ func TestUnknownFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
 		"./test_assets/invalid.exe",
 		[]Rule{},
-		[]Action{},
 	}
 
 	af, err := convert(f, "")
@@ -28,7 +27,6 @@ func TestNotExistingFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
 		"./test_assets/not_existing.doc",
 		[]Rule{},
-		[]Action{},
 	}
 
 	af, err := convert(f, "")
@@ -42,7 +40,6 @@ func TestDocFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
 		"./test_assets/file-sample_100kB.doc",
 		[]Rule{},
-		[]Action{},
 	}
 
 	af, err := convert(f, "")
@@ -59,7 +56,6 @@ func TestDocxFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
 		"./test_assets/file-sample_100kB.docx",
 		[]Rule{},
-		[]Action{},
 	}
 
 	af, err := convert(f, "")
@@ -76,7 +72,6 @@ func TestPdfFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
 		"./test_assets/file-sample_150kB.pdf",
 		[]Rule{},
-		[]Action{},
 	}
 
 	af, err := convert(f, "")
@@ -93,7 +88,6 @@ func TestOdtFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
 		"./test_assets/file-sample_100kB.odt",
 		[]Rule{},
-		[]Action{},
 	}
 
 	af, err := convert(f, "")

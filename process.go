@@ -8,15 +8,15 @@ import (
 
 // Rule is a list of Match that neeeds to be validated
 type Rule struct {
-	Conditions []Match
-	Actions    []Action
+	Conditions []Match  `required:"true"`
+	Actions    []Action `required:"true"`
 }
 
 // Match is verified against a file content, title, metadata...
 type Match struct {
-	Elem     string
-	Matches  string
-	Expected bool
+	Elem     string `required:"true"`
+	Matches  string `required:"true"`
+	Expected bool   `required:"true"`
 }
 
 func validateRule(r Rule) bool {
@@ -80,7 +80,7 @@ func processFile(process chan AnalysedFile) {
 			if processRule(rule, f) {
 				err := action(f, rule.Actions)
 				if err != nil {
-					log.Printf("Error while proceding to actions %v : %v", f.Actions, err)
+					log.Printf("Error while proceding to actions %v : %v", rule.Actions, err)
 				}
 				hasMatched = true
 			}
