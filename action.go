@@ -20,8 +20,8 @@ const (
 	copyOperation string = "copy"
 )
 
-func action(f AnalysedFile) error {
-	for _, action := range f.Actions {
+func action(f AnalysedFile, actions []Action) error {
+	for _, action := range actions {
 		switch action.Operation {
 		case copyOperation:
 			dest := path.Join(action.Destination, path.Base(f.Path))

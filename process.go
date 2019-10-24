@@ -1,12 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 )
 
 // Rule is a list of Match that neeeds to be validated
-type Rule []Match
+type Rule struct {
+	Conditions []Match
+	Actions    []Action
+}
 
 // Match is verified against a file content, title, metadata...
 type Match struct {
@@ -16,7 +20,7 @@ type Match struct {
 }
 
 func validateRule(r Rule) bool {
-	for _, m := range r {
+	for _, m := range r.Conditions {
 		if m.Elem != "content" &&
 			m.Elem != "metadata" &&
 			m.Elem != "type" &&
@@ -32,8 +36,9 @@ func elements(elem string, f AnalysedFile) []string {
 	if elem == "content" {
 		e = append(e, f.TextContent)
 	} else if elem == "metadata" {
-		for _, m := range f.Meta {
-			e = append(e, m)
+		for _, meta := range f.Meta {
+			fmt.Println(meta)
+			e = append(e, meta)
 		}
 	} else if elem == "type" {
 		e = append(e, f.Type)
@@ -45,7 +50,7 @@ func elements(elem string, f AnalysedFile) []string {
 
 func processRule(r Rule, f AnalysedFile) bool {
 
-	for _, m := range r {
+	for _, m := range r.Conditions {
 		if !validateRule(r) {
 			log.Printf("Invalid rule %v", m)
 			return false
@@ -70,12 +75,17 @@ func processRule(r Rule, f AnalysedFile) bool {
 
 func processFile(process chan AnalysedFile) {
 	for f := range process {
+		hasMatched := false
 		for _, rule := range f.Rules {
 			if processRule(rule, f) {
-				err := action(f)
+				err := action(f, rule.Actions)
 				if err != nil {
 					log.Printf("Error while proceding to actions %v : %v", f.Actions, err)
 				}
+				hasMatched = true
+			}
+			if hasMatched {
+				break
 			}
 		}
 	}

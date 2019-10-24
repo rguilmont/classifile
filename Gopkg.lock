@@ -14,6 +14,14 @@
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:9f3b30d9f8e0d7040f729b82dcbc8f0dead820a133b3147ce355fc451f32d761"
+  name = "github.com/BurntSushi/toml"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3012a1dbe2e4bd1391d42b32f0577cb7bbc7f005"
+  version = "v0.3.1"
+
+[[projects]]
   branch = "master"
   digest = "1:b357150cc93d5dea09cf4d36a7acbae83ec47eddf85e25cc43edfa1c7fb0b83e"
   name = "github.com/JalfResi/justext"
@@ -96,6 +104,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "01ec452cbe43774f989516272881441cae40c16b"
+
+[[projects]]
+  digest = "1:6badb17f9fa52d93054ab8b282a5f8776b17a2bc3b862f84444a57fceb23cc46"
+  name = "github.com/jinzhu/configor"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f52abb230c951b14a04e8515ca4e248be7690321"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -188,12 +204,21 @@
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
   version = "v0.3.2"
 
+[[projects]]
+  digest = "1:59f10c1537d2199d9115d946927fe31165959a95190849c82ff11e05803528b0"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f221b8435cfb71e54062f6c6e99e9ade30b124d5"
+  version = "v2.2.4"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "code.sajari.com/docconv",
     "github.com/gabriel-vasile/mimetype",
+    "github.com/jinzhu/configor",
     "github.com/otiai10/copy",
   ]
   solver-name = "gps-cdcl"

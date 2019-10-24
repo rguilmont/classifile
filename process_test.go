@@ -7,11 +7,14 @@ import (
 func TestInvalidRuleValidation(t *testing.T) {
 
 	r := Rule{
-		Match{
-			"contents",
-			"",
-			true,
+		[]Match{
+			Match{
+				"test",
+				"(.?)romain",
+				true,
+			},
 		},
+		[]Action{},
 	}
 
 	status := validateRule(r)
@@ -35,44 +38,56 @@ func TestMatchingRules(t *testing.T) {
 	}
 
 	rule := Rule{
-		Match{
-			"content",
-			"valid file",
-			true,
+		[]Match{
+			Match{
+				"content",
+				"valid file",
+				true,
+			},
 		},
+		[]Action{},
 	}
 	if !processRule(rule, a) {
 		t.Errorf("Rule is not matching, but should match. Rule : %v", rule)
 	}
 
 	rule = Rule{
-		Match{
-			"content",
-			"this is not matchin",
-			true,
+		[]Match{
+			Match{
+				"content",
+				"this is not matching",
+				true,
+			},
 		},
+		[]Action{},
 	}
 	if processRule(rule, a) {
 		t.Errorf("Rule is matching, but should not match. Rule : %v", rule)
 	}
 
 	rule = Rule{
-		Match{
-			"metadata",
-			"(?i)(romain)",
-			true,
+		[]Match{
+			Match{
+				"metadata",
+				"(?i)ro.ain",
+				true,
+			},
 		},
+		[]Action{},
 	}
 	if !processRule(rule, a) {
 		t.Errorf("Rule is not matching, but should match. Rule : %v", rule)
 	}
 
 	rule = Rule{
-		Match{
-			"This is not",
-			"a valid rule",
-			true,
+		[]Match{
+			Match{
+				"This is not",
+				"a valid rule",
+				true,
+			},
 		},
+		[]Action{},
 	}
 	if processRule(rule, a) {
 		t.Errorf("Rule is matching, but should be invalid and not match. Rule : %v", rule)

@@ -1,2 +1,4 @@
 vendor
-
+cover.out
+coverage.html
+configuration.yaml
