@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	"code.sajari.com/docconv"
 )
 
@@ -28,6 +30,11 @@ func convert(f UnanalysedFile, fileType string) (AnalysedFile, error) {
 	res, err := docconv.ConvertPath(f.Path)
 	if err != nil {
 		return analysed, err
+	}
+	// When docconv can't convert a file, instead of returning an error, it returns
+	//  an empty Body and empty Metadata
+	if res.Body == "" && len(res.Meta) == 0 {
+		return analysed, errors.New("Can't convert file")
 	}
 
 	analysed.Meta = res.Meta

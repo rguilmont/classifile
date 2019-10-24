@@ -72,7 +72,10 @@ func processFile(process chan AnalysedFile) {
 	for f := range process {
 		for _, rule := range f.Rules {
 			if processRule(rule, f) {
-				go action(f)
+				err := action(f)
+				if err != nil {
+					log.Printf("Error while proceding to actions %v : %v", f.Actions, err)
+				}
 			}
 		}
 	}

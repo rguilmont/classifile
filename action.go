@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"log"
+	"os"
 	"path"
 
 	"github.com/otiai10/copy"
@@ -18,7 +20,7 @@ const (
 	copyOperation string = "copy"
 )
 
-func action(f AnalysedFile) {
+func action(f AnalysedFile) error {
 	for _, action := range f.Actions {
 		switch action.Operation {
 		case copyOperation:
@@ -26,8 +28,22 @@ func action(f AnalysedFile) {
 			log.Printf("Copying file %v to %v", f.Path, dest)
 			err := copy.Copy(f.Path, dest)
 			if err != nil {
-				log.Printf("Error while copying file %v : %v", f.Path, err)
+				return err
 			}
+		case moveOperation:
+			dest := path.Join(action.Destination, path.Base(f.Path))
+			log.Printf("Moving file %v to %v", f.Path, dest)
+			err := copy.Copy(f.Path, dest)
+			if err != nil {
+				return err
+			}
+			err = os.Remove(f.Path)
+			if err != nil {
+				return err
+			}
+		default:
+			return errors.New("Error : Unknown action")
 		}
 	}
+	return nil
 }

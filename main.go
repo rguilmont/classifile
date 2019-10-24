@@ -7,19 +7,12 @@ import (
 func main() {
 	log.Println("Starting golang classifier...")
 
-	//
 	req := SearchRequest{
 		".*.pdf",
 		"/home/romain/Downloads2",
 		[]Rule{
 			[]Match{
-				Match{
-					"content",
-					"(?i)(Crédit Agricole)",
-					true,
-				},
-			},
-			{
+
 				Match{
 					"content",
 					"(?i)(ocana)",
@@ -34,7 +27,7 @@ func main() {
 		},
 		[]Action{
 			Action{
-				"copy",
+				"move",
 				"/tmp/gros_chien/chien/",
 			},
 		},
@@ -43,10 +36,8 @@ func main() {
 	ch := make(chan UnanalysedFile)
 	ch2 := make(chan AnalysedFile)
 
-	for i := 0; i < 1; i++ {
-		go analyse(ch, ch2)
-		go processFile(ch2)
-	}
+	go analyse(ch, ch2)
+	go processFile(ch2)
 
 	search([]SearchRequest{req, req}, ch)
 	close(ch)
