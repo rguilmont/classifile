@@ -6,6 +6,7 @@ import (
 	"code.sajari.com/docconv"
 )
 
+// UnanalysedFile represent a file ready to be analysed
 type UnanalysedFile struct {
 	Path  string
 	Rules []Rule
