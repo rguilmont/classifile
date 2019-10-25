@@ -21,24 +21,15 @@ type Args struct {
 	DryRun        bool
 }
 
-func main() {
-	log.Println("Starting file classifier...")
-	args := new(Args)
-	c := new(Configuration)
-
-	flag.StringVar(&args.Configuration, "conf", "config.yml", "Configuration file to load")
-	flag.BoolVar(&args.DryRun, "dry-run", false, "Don't execute actions, just display what would happen")
-	flag.Parse()
-
-	dryRun = args.DryRun
-
-	if dryRun {
-		log.Println("Running in dry-run mode")
+func run(args Args) {
+	conf := new(Configuration)
+	if args.DryRun {
+		log.Println("Running in dry-run mode.")
 	}
 
-	err := configor.Load(c, args.Configuration)
+	err := configor.Load(conf, args.Configuration)
 
-	if err != nil || len(c.SearchOperations) == 0 {
+	if err != nil || len(conf.SearchOperations) == 0 {
 		log.Panicf("Impossible to load configuration file. %v", err)
 	}
 
@@ -50,7 +41,17 @@ func main() {
 	go analyse(ch, ch2)
 	go processFile(executor, ch2)
 
-	search(c.SearchOperations, ch)
+	search(conf.SearchOperations, ch)
 	close(ch)
 	<-ch2
+}
+
+func main() {
+	log.Println("Starting file classifier...")
+	args := new(Args)
+	flag.StringVar(&args.Configuration, "conf", "config.yml", "Configuration file to load")
+	flag.BoolVar(&args.DryRun, "dry-run", false, "Don't execute actions, just display what would happen")
+	flag.Parse()
+
+	run(*args)
 }

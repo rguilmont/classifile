@@ -54,7 +54,7 @@ func TestDocFileConvertion(t *testing.T) {
 
 func TestDocxFileConvertion(t *testing.T) {
 	f := UnanalysedFile{
-		"./test_assets/file-sample_100kB.docx",
+		"./test_assets/other_file/file-sample_100kB.docx",
 		[]Rule{},
 	}
 

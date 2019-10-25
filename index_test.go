@@ -97,7 +97,7 @@ func TestAnalyseRequest(t *testing.T) {
 	go analyse(c1, c2)
 	go func() {
 		c1 <- UnanalysedFile{
-			"./test_assets/file-sample_100kB.docx",
+			"./test_assets/other_file/file-sample_100kB.docx",
 			[]Rule{},
 		}
 	}()

@@ -1,0 +1,34 @@
+# This is a sample configuration for classifile
+
+searchoperations:
+  - filename: ".(doc|odt|pdf)$"
+    directory: ./test_assets/
+    rules:
+      - conditions:
+        - elem: path
+          matches: "(?i)(file_to_move)"
+          expected: yes
+        actions:
+          - operation: move
+            destination: ./result_test_assets1/
+      - conditions:
+        - elem: content
+          matches: "(?i)(lorem ipsum)"
+          expected: yes
+        - elem: type
+          matches: "(?i)pdf$"
+          expected: no
+        actions:
+          - operation: copy
+            destination: ./result_test_assets1/
+
+  - filename: ".+"
+    directory: ./test_assets/
+    rules:
+      - conditions:
+        - elem: content
+          matches: "(?i)(lorem ipsum)"
+          expected: yes
+        actions:
+          - operation: copy
+            destination: ./result_test_assets2/

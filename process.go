@@ -16,7 +16,7 @@ type Rule struct {
 type Match struct {
 	Elem     string `required:"true"`
 	Matches  string `required:"true"`
-	Expected bool   `required:"true"`
+	Expected bool
 }
 
 func validateRule(r Rule) bool {
