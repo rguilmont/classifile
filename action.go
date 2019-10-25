@@ -25,7 +25,7 @@ func (d DefaultExecutor) copy(src string, dest string) error {
 
 func (d DefaultExecutor) move(src string, dest string) error {
 	err := copy.Copy(src, dest)
-	if err != nil {
+	if err == nil {
 		return os.Remove(src)
 	}
 	return err
