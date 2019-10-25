@@ -27,13 +27,8 @@ func newset() *set {
 	return s
 }
 
-// Remove a set
 func (s *set) add(value string) {
 	s.m[value] = true
-}
-
-func (s *set) remove(value string) {
-	delete(s.m, value)
 }
 
 func (s *set) contains(value string) bool {
