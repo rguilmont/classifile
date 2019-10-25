@@ -45,8 +45,10 @@ func main() {
 	ch := make(chan UnanalysedFile)
 	ch2 := make(chan AnalysedFile)
 
+	executor := DefaultExecutor{}
+
 	go analyse(ch, ch2)
-	go processFile(ch2)
+	go processFile(executor, ch2)
 
 	search(c.SearchOperations, ch)
 	close(ch)

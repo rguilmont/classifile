@@ -73,12 +73,12 @@ func processRule(r Rule, f AnalysedFile) bool {
 	return true
 }
 
-func processFile(process chan AnalysedFile) {
+func processFile(exec Executor, process chan AnalysedFile) {
 	for f := range process {
 		hasMatched := false
 		for _, rule := range f.Rules {
 			if processRule(rule, f) {
-				err := action(f, rule.Actions)
+				err := action(exec, f, rule.Actions)
 				if err != nil {
 					log.Printf("Error while proceding to actions %v : %v", rule.Actions, err)
 				}
