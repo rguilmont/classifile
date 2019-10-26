@@ -2,13 +2,21 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/jinzhu/configor"
 )
 
 // Global flags
 var dryRun = false
+
+// Export variables for version
+var (
+	GitSummary string
+	BuildDate  string
+)
 
 // Configuration is the configuration format
 type Configuration struct {
@@ -19,9 +27,15 @@ type Configuration struct {
 type Args struct {
 	Configuration string
 	DryRun        bool
+	Version       bool
 }
 
 func run(args Args) {
+	if args.Version {
+		fmt.Printf("Version %v  - build at %v\n", GitSummary, BuildDate)
+		os.Exit(0)
+	}
+
 	conf := new(Configuration)
 	if args.DryRun {
 		log.Println("Running in dry-run mode.")
@@ -47,10 +61,10 @@ func run(args Args) {
 }
 
 func main() {
-	log.Println("Starting file classifier...")
 	args := new(Args)
 	flag.StringVar(&args.Configuration, "conf", "config.yml", "Configuration file to load")
 	flag.BoolVar(&args.DryRun, "dry-run", false, "Don't execute actions, just display what would happen")
+	flag.BoolVar(&args.Version, "version", false, "display version")
 	flag.Parse()
 
 	run(*args)
