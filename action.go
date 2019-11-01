@@ -2,9 +2,10 @@ package main
 
 import (
 	"errors"
-	"log"
 	"os"
 	"path"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/otiai10/copy"
 )
@@ -47,7 +48,11 @@ func action(exec Executor, f AnalysedFile, actions []Action) error {
 		switch action.Operation {
 		case copyOperation:
 			dest := path.Join(action.Destination, path.Base(f.Path))
-			log.Printf("Copying file %v to %v", f.Path, dest)
+			log.WithFields(log.Fields{
+				"operation": action.Operation,
+				"src":       f.Path,
+				"dest":      dest,
+			}).Infof("Executing action")
 
 			if !dryRun {
 				err := exec.copy(f.Path, dest)
@@ -57,7 +62,11 @@ func action(exec Executor, f AnalysedFile, actions []Action) error {
 			}
 		case moveOperation:
 			dest := path.Join(action.Destination, path.Base(f.Path))
-			log.Printf("Moving file %v to %v", f.Path, dest)
+			log.WithFields(log.Fields{
+				"operation": action.Operation,
+				"src":       f.Path,
+				"dest":      dest,
+			}).Infof("Executing action")
 			if !dryRun {
 				err := exec.move(f.Path, dest)
 				if err != nil {

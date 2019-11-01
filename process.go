@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"regexp"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Rule is a list of Match that neeeds to be validated
@@ -52,7 +53,7 @@ func processRule(r Rule, f AnalysedFile) bool {
 
 	for _, m := range r.Conditions {
 		if !validateRule(r) {
-			log.Printf("Invalid rule %v", m)
+			log.Warnf("Invalid rule %v", m)
 			return false
 		}
 
@@ -60,16 +61,16 @@ func processRule(r Rule, f AnalysedFile) bool {
 		for _, content := range e {
 			res, err := regexp.MatchString(m.Matches, content)
 			if err != nil {
-				log.Printf("Error while processing match %v : %v", m, err)
+				log.Warnf("Error while processing match %v : %v", m, err)
 				return false
 			}
 			if res != m.Expected {
-				log.Printf("PROCESSING RULE %v - %v NOT TRIGGERED", r, f.Path)
+				log.Debugf("PROCESSING RULE %v - %v NOT TRIGGERED", r, f.Path)
 				return false
 			}
 		}
 	}
-	log.Printf("PROCESSING RULE %v - %v TRIGGERED", r, f.Path)
+	log.Debugf("PROCESSING RULE %v - %v TRIGGERED", r, f.Path)
 	return true
 }
 
@@ -80,7 +81,7 @@ func processFile(exec Executor, process chan AnalysedFile) {
 			if processRule(rule, f) {
 				err := action(exec, f, rule.Actions)
 				if err != nil {
-					log.Printf("Error while proceding to actions %v : %v", rule.Actions, err)
+					log.Warnf("Error while proceding to actions %v : %v", rule.Actions, err)
 				}
 				hasMatched = true
 			}

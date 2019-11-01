@@ -1,10 +1,11 @@
 package main
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gabriel-vasile/mimetype"
 )
@@ -46,11 +47,11 @@ func search(requests []SearchRequest, analyse chan UnanalysedFile) {
 		matchingFiles := newset()
 		err := filepath.Walk(request.Directory, func(p string, f os.FileInfo, err error) error {
 			if err != nil {
-				log.Printf("Error while searching on directory %v : %v", p, err)
+				log.Warnf("Error while searching on directory %v : %v", p, err)
 			} else {
 				match, err := regexp.MatchString(request.FileName, f.Name())
 				if err != nil {
-					log.Printf("Error while searchgin with regex %v : %v", request.FileName, err)
+					log.Warnf("Error while searchgin with regex %v : %v", request.FileName, err)
 				} else {
 					if !f.IsDir() && match {
 						matchingFiles.add(p)
@@ -61,11 +62,11 @@ func search(requests []SearchRequest, analyse chan UnanalysedFile) {
 		})
 
 		if err != nil {
-			log.Printf("Error while searching into directory %v : %v", request.Directory, request.FileName)
+			log.Warnf("Error while searching into directory %v : %v", request.Directory, request.FileName)
 		}
 		for f := range matchingFiles.m {
 			if found.contains(f) {
-				log.Printf("File %v already processed", f)
+				log.Debugf("File %v already processed", f)
 			} else {
 				found.add(f)
 				analyse <- UnanalysedFile{f, request.Rules}
@@ -77,16 +78,16 @@ func search(requests []SearchRequest, analyse chan UnanalysedFile) {
 // analyse a file, usually by reading or converting it, and them send it to
 func analyse(analyse chan UnanalysedFile, process chan AnalysedFile) {
 	for f := range analyse {
-		log.Printf("Processing file %v", f)
+		log.Debugf("Processing file %v", f)
 
 		// First get the type of the file
 		fileType, _, err := mimetype.DetectFile(f.Path)
 		if err != nil {
-			log.Printf("Error while detecting type of file %v : %v", f, err)
+			log.Warnf("Error while detecting type of file %v : %v", f, err)
 		} else {
 			analysed, err := convert(f, fileType)
 			if err != nil {
-				log.Printf("Error while converting file %v : %v", f, err)
+				log.Warnf("Error while converting file %v : %v", f, err)
 			} else {
 				process <- analysed
 			}

@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jinzhu/configor"
 )
@@ -28,6 +29,7 @@ type Args struct {
 	Configuration string
 	DryRun        bool
 	Version       bool
+	Debug         bool
 }
 
 func run(args Args) {
@@ -36,10 +38,22 @@ func run(args Args) {
 		os.Exit(0)
 	}
 
-	conf := new(Configuration)
-	if args.DryRun {
-		log.Println("Running in dry-run mode.")
+	// Formating logs
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+	})
+	if args.Debug {
+		log.SetReportCaller(true)
+		log.SetLevel(log.DebugLevel)
+		log.Debugln("Debug mode activated.")
 	}
+
+	if args.DryRun {
+		log.Infoln("Running in dry-run mode.")
+	}
+
+	// Load configuration
+	conf := new(Configuration)
 
 	err := configor.Load(conf, args.Configuration)
 
@@ -64,7 +78,9 @@ func main() {
 	args := new(Args)
 	flag.StringVar(&args.Configuration, "conf", "config.yml", "Configuration file to load")
 	flag.BoolVar(&args.DryRun, "dry-run", false, "Don't execute actions, just display what would happen")
-	flag.BoolVar(&args.Version, "version", false, "display version")
+	flag.BoolVar(&args.Version, "version", false, "Display version")
+	flag.BoolVar(&args.Debug, "debug", false, "Activate debug logs")
+
 	flag.Parse()
 
 	run(*args)

@@ -24,7 +24,7 @@ func TestClassification(t *testing.T) {
 		}
 	}
 
-	run(Args{"./test_assets/test.yaml", false})
+	run(Args{"./test_assets/test.yaml", false, false, true})
 	time.Sleep(5 * time.Second)
 
 	// Check presence of files given the rules
